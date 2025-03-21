@@ -1,5 +1,3 @@
-import random  # Import the random module for computer's move selection
-
 count = 0  # Move counter
 location = [[0, 0], [0, 1], [1, 0], [2, 1], [2, 2]]  # Predefined locations for the computer to choose from
 
