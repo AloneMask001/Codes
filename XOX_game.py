@@ -23,9 +23,6 @@ while True:  # Main game loop
         if area[i][j] == " ":  # Check if the chosen position is empty
             area[i][j] = answer_sign  # Place the user's move
             break  # Exit user input loop
-    
-    print(area[0][0])  # Debugging: Print the first cell (not necessary)
-    print(answer_sign, i, j)  # Debugging: Print user's move info
 
     # Computer's turn
     while True:
