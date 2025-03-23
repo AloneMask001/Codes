@@ -26,7 +26,7 @@ while True:  # Main game loop
 
     # Computer's turn
     while True:
-        computer_location_choice = random.choice(location)  # Rastgele bir koordinat seç # Randomly select a position from predefined list
+        computer_location_choice = random.choice(location) # Randomly select a position from predefined list
         if area[computer_location_choice[0]][computer_location_choice[1]] == " ":  # Check if position is empty
             area[computer_location_choice[0]][computer_location_choice[1]] = computer_sign_choice  # Place move
             break  # Exit computer move loop
