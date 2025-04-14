@@ -123,7 +123,7 @@ except ValueError:
 except Exception as e:
     print(f"Something went wrong! {e}")
 
-# En yakın zamanda dönmen dileğiyle verep ben kaçar :) kendini çok sev tamam mı ::::::::)
+
 
 
 
