@@ -1,168 +1,160 @@
 #include <iostream>
 using namespace std;
 
-// Düğüm (Node) sınıfının tanımı
-class Node{
-    public:
-        int Value;
-        Node* Next;
+// Node class representing a single element in the linked list
+class Node {
+public:
+    int Value;
+    Node* Next;
 };
 
-/**
- * @brief Listenin tamamını baştan sona yazdırır (Iterative).
- * @param n Başlangıç düğümü (head).
- */
-void printList(Node* n){
-    while(n != NULL){
+// Function to print the linked list
+void printList(Node* n) {
+    while (n != NULL) {
         cout << n->Value << " -> ";
         n = n->Next;
     }
     cout << "NULL" << endl;
 }
 
-/**
- * @brief Listenin başına yeni bir düğüm ekler.
- * @param head Listenin 'head' pointer'ına bir pointer (Node**).
- * @param newValue Eklenecek yeni değer.
- */
-void insertAtThefront(Node **head, int newValue){ 
-    // Yorum: &head'i (head pointer'ının adresini) göndermemizin nedeni,
-    // ASIL head'i değiştirmek istememizdir. Diğer türlü bir kopya üzerinde çalışırdık.
-    
-    // 1. Yeni düğümü hazırla
+// Insert a new node at the beginning (Head) of the list
+// We use Node** (pointer to pointer) because we need to modify the actual head pointer
+void insertAtTheFront(Node** head, int newValue) {
+    // 1. Prepare a new node
     Node* newNode = new Node();
     newNode->Value = newValue;
     
-    // 2. Yeni düğümün 'Next'ini mevcut head yap
-    newNode->Next = *head;  
-    
-    // 3. 'head' pointer'ını güncelleyerek yeni düğümü göster
+    // 2. Link the new node to the current head
+    newNode->Next = *head;
+
+    // 3. Move the head to point to the new node
     *head = newNode;
 }
 
-/**
- * @brief Listenin sonuna yeni bir düğüm ekler.
- * @param head Listenin 'head' pointer'ına bir pointer (Node**).
- * @param newValue Eklenecek yeni değer.
- */
-void insertAtThend(Node **head, int newValue){
-    // 1. Yeni düğümü hazırla ve son düğüm olacağı için Next'ini NULL yap
-    Node *newNode = new Node();
-    newNode ->Value = newValue;
-    newNode ->Next = NULL;
+// Insert a new node at the end of the list
+void insertAtTheEnd(Node** head, int newValue) {
+    // 1. Prepare the new node
+    Node* newNode = new Node();
+    newNode->Value = newValue;
+    newNode->Next = NULL; // Since it will be the last node, next is NULL
 
-    // 2. Liste boşsa, 'head'i bu yeni düğüm yap
-    if(*head == NULL){
+    // 2. If the list is empty, make the new node the head
+    if (*head == NULL) {
         *head = newNode;
-        return; 
-    }
-
-    // 3. Liste boş değilse, son düğümü bul
-    Node *last = *head;
-    while(last->Next != NULL){
-        last = last ->Next;
-    }
-
-    // 4. Son düğümün 'Next'ini yeni düğüm olarak ayarla
-    last -> Next = newNode;
-}
-
-/**
- * @brief Belirli bir düğümden ('previous') sonraya yeni bir düğüm ekler.
- * @param previous Yeni düğümün ekleneceği yerin bir önceki düğümü.
- * @param NewValue Eklenecek yeni değer.
- */
-void InsertAt(Node *previous, int NewValue){
-    // Hata kontrolü: 'previous' NULL olamaz
-    if(previous == NULL){
-        cout << "HATA: 'previous' dugumu NULL olamaz!" << endl;
         return;
     }
-    
-    // 1. Yeni düğümü hazırla
-    Node *newNode = new Node();
-    newNode -> Value = NewValue;
-    
-    // 2. Yeni düğümün 'Next'ini, 'previous'ın 'Next'i yap
-    newNode -> Next = previous -> Next;
-    
-    // 3. 'previous'ın 'Next'ini yeni düğüm yap
-    previous -> Next = newNode;
+
+    // 3. Traverse to the last node
+    Node* last = *head;
+    while (last->Next != NULL) {
+        last = last->Next;
+    }
+
+    // 4. Change the next of the last node
+    last->Next = newNode;
 }
 
-/**
- * @brief Listenin tamamını baştan sona yazdırır (Recursive).
- * @param n Başlangıç düğümü (head).
- */
-void PrintRecursion(Node* n){
-    // Temel Durum (Base Case): Liste bittiyse dur.
-    if(n == NULL){
+// Insert a new node after a specific node
+void insertAfter(Node* previous, int newValue) {
+    // 1. Check if the given previous node is NULL
+    if (previous == NULL) {
+        cout << "Previous node cannot be NULL!" << endl;
         return;
     }
-    
-    // Özyineli Adım (Recursive Step):
-    // Önce mevcut değeri yazdır, sonra geri kalanı için fonksiyonu çağır.
-    cout << n ->Value << endl;
-    PrintRecursion(n ->Next); // 'return' gereksiz
+
+    // 2. Prepare the new node
+    Node* newNode = new Node();
+    newNode->Value = newValue;
+
+    // 3. Make next of new node as next of previous node
+    newNode->Next = previous->Next;
+
+    // 4. Move the next of previous node as new node
+    previous->Next = newNode;
 }
 
-/**
- * @brief Listenin tamamını sondan başa (ters) yazdırır (Recursive).
- * @param n Başlangıç düğümü (head).
- */
-void PrintReverseRecursion(Node * n){
-    // Temel Durum (Base Case): Liste bittiyse dur.
-    if(n == NULL)
+// Function to delete the last node of the linked list
+void deleteLast(Node** head) {
+    // Case 1: If the list is empty
+    if (*head == NULL) {
+        cout << "The list is already empty." << endl;
         return;
+    }
 
-    // Özyineli Adım (Recursive Step):
-    // ÖNCE listenin geri kalanı için fonksiyonu çağır (ve bitmesini bekle).
-    PrintReverseRecursion(n -> Next);
-    
-    // Geri kalan her şey yazdırıldıktan SONRA mevcut değeri yazdır.
-    cout << n->Value <<  endl;
+    // Case 2: If the list has only one node
+    if ((*head)->Next == NULL) {
+        delete *head; // Free memory
+        *head = NULL; // Set head to NULL
+        return;
+    }
+
+    // Case 3: If the list has more than one node
+    Node* travel = *head;
+
+    // Traverse to the second to last node
+    while (travel->Next->Next != NULL) {
+        travel = travel->Next;
+    }
+
+    // Now 'travel' points to the second to last node
+    Node* temp = travel->Next; // This is the last node we want to delete
+    delete temp;               // Free memory
+    travel->Next = NULL;       // Update the next pointer of the new last node
 }
 
-int main(){
-
-    // Listeyi boş başlat
-    Node* head = NULL;
-
-    // Listeyi doldur
-    insertAtThend(&head, 100);
-    insertAtThend(&head, 200);
-    insertAtThend(&head, 300);
-    
-    cout << "Orijinal Liste:" << endl;
-    printList(head); // 100 -> 200 -> 300 -> NULL
-    
-    cout << "\nBaşa -1 eklendi:" << endl;
-    insertAtThefront(&head, -1);
-    printList(head); // -1 -> 100 -> 200 -> 300 -> NULL
-    
-    cout << "\nSona 400 eklendi:" << endl;
-    insertAtThend(&head, 400);
-    printList(head); // -1 -> 100 -> 200 -> 300 -> 400 -> NULL
-
-    // '200' düğümünü bulup (bu head->Next->Next olur) ondan sonraya 250 ekleyelim
-    cout << "\n200'den sonraya 250 eklendi:" << endl;
-    if(head != NULL && head->Next != NULL && head->Next->Next != NULL){
-         InsertAt(head->Next->Next, 250); // head->Next->Next = 200'lük düğüm
+// Print the list recursively
+void printRecursion(Node* n) {
+    if (n == NULL) {
+        return;
     }
-    printList(head); // -1 -> 100 -> 200 -> 250 -> 300 -> 400 -> NULL
+    cout << n->Value << endl;
+    printRecursion(n->Next);
+}
 
-    cout << "\nListe Tersten Yazdirma (Recursive):" << endl;
-    PrintReverseRecursion(head);
+// Print the list in reverse order using recursion
+void printReverseRecursion(Node* n) {
+    if (n == NULL) {
+        return;
+    }
+    printReverseRecursion(n->Next);
+    cout << n->Value << endl;
+}
 
+int main() {
+    // Creating nodes
+    Node* head = new Node();
+    Node* second = new Node();
+    Node* third = new Node();
 
-    // ÖNEMLİ: Hafızayı temizle
-    cout << "\nProgram bitti, hafiza temizleniyor..." << endl;
-    while (head != NULL) {
-        Node* tmp = head;
+    // Linking nodes and assigning values
+    head->Value = 100;
+    head->Next = second;
+
+    second->Value = 200;
+    second->Next = third;
+
+    third->Value = 300;
+    third->Next = NULL;
+
+    cout << "--- Initial List ---" << endl;
+    printList(head);
+
+    // Testing deleteLast function
+    cout << "\n--- Deleting the last element ---" << endl;
+    deleteLast(&head);
+    printList(head);
+
+    cout << "\n--- Deleting another element ---" << endl;
+    deleteLast(&head);
+    printList(head);
+
+    // Memory Cleanup: Delete all remaining nodes to prevent memory leaks
+    while (head != nullptr) {
+        Node* temp = head;
         head = head->Next;
-        delete tmp;
+        delete temp;
     }
-    cout << "Tum dugumler (pointer) hafizadan silindi." << endl;
+    cout << "\nAll nodes deleted. Memory cleaned up." << endl;
 
     return 0;
 }
